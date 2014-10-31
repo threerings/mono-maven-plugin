@@ -21,7 +21,6 @@ For a complete description of all the options, look at the source or in the mave
 
 ## License
 
-monotouch-maven-plugin is released under the MIT License, which can be found in the [LICENSE] file.
+mono-maven-plugin is released under the MIT License, which can be found in the [LICENSE] file.
 
-[LICENSE]: https://github.com/threerings/mono-maven-plugin/blob/master/LICENSE
-
+[LICENSE]: https://github.com/jamie-threerings/mono-maven-plugin/blob/master/LICENSE
