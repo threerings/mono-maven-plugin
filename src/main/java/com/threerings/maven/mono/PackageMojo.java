@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
@@ -20,7 +19,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.Commandline;
 
 /**
@@ -65,6 +63,13 @@ public class PackageMojo extends AbstractMojo
     private String target;
 
     /**
+     * Sets whether the fully qualified artifact name should be used when creating the dll. This
+     * can be an issue when assembly names are being checked downstream.
+     */
+    @Parameter(defaultValue="false", property="mono.useFullArtifactName")
+    private boolean useFullArtifactName;
+
+    /**
      * Defines the verbose flag (-v).
      */
     @Parameter(defaultValue="false", property="mono.verbose")
@@ -91,7 +96,11 @@ public class PackageMojo extends AbstractMojo
         }
 
         // configure artifact file
-        File artifactFile = new File(projectDir, project.getBuild().getFinalName() + ".dll");
+        String targetFilename = (useFullArtifactName ?
+            project.getBuild().getFinalName(): project.getArtifactId());
+        getLog().debug("Target filename: " + targetFilename);
+
+        File artifactFile = new File(projectDir, targetFilename + ".dll");
         project.getArtifact().setFile(artifactFile);
 
         cli.createArg().setValue("-out:" + artifactFile.getPath());
