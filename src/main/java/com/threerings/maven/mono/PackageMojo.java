@@ -146,7 +146,7 @@ public class PackageMojo extends AbstractMojo
                 if (line == null) {
                     break;
                 }
-                getLog().info("[gmcs] " + line);
+                getLog().error("[gmcs] " + line);
             }
             try {
                 int code = process.waitFor();
