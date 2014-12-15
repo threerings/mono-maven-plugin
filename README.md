@@ -1,7 +1,7 @@
 # mono-maven-plugin
 
 This plugin overriddes the default lifecycle and provides a package phase that creates the dll. It
-generates the DLL using the command line tool `gmcs`. Dependencies of type dll are automatically
+generates the DLL using the command line tool `mcs`. Dependencies of type dll are automatically
 included, and other command line options can be configured.
 
 ## Usage

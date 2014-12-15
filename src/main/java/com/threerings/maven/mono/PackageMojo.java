@@ -22,7 +22,7 @@ import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.cli.Commandline;
 
 /**
- * A compile phase which uses {@code gmcs} to compile a cs files.
+ * A compile phase which uses {@code mcs} to compile a cs files.
  *
  * <p>IMPORTANT: requires the plugin to be registered as an extension so it can run in place
  * of javac for the compile phase</p>
@@ -32,10 +32,10 @@ import org.codehaus.plexus.util.cli.Commandline;
 public class PackageMojo extends AbstractMojo
 {
     /**
-     * Location of {@code gmcs} binary.
+     * Location of {@code mcs} binary.
      */
-    @Parameter(defaultValue="gmcs", property="mono.gmcs")
-    private String gmcsPath;
+    @Parameter(defaultValue="mcs", property="mono.mcs")
+    private String mcsPath;
 
     /**
      * Source file patterns to include.
@@ -83,7 +83,7 @@ public class PackageMojo extends AbstractMojo
     {
         getLog().debug("Base dir: " + project.getBasedir().getPath());
 
-        Commandline cli = new Commandline(gmcsPath);
+        Commandline cli = new Commandline(mcsPath);
         cli.setWorkingDirectory(project.getBasedir());
         if (verbose) {
             cli.createArg().setValue("-v");
@@ -146,18 +146,18 @@ public class PackageMojo extends AbstractMojo
                 if (line == null) {
                     break;
                 }
-                getLog().error("[gmcs] " + line);
+                getLog().error("[mcs] " + line);
             }
             try {
                 int code = process.waitFor();
                 if (code != 0) {
-                    throw new MojoExecutionException("gmcs failed: " + code);
+                    throw new MojoExecutionException("mcs failed: " + code);
                 }
             } catch (InterruptedException ex) {
                 throwMojo("Interrupted", ex);
             }
         } catch (IOException ex) {
-            throwMojo("Failed to execute gmcs", ex);
+            throwMojo("Failed to execute mcs", ex);
         }
     }
 
