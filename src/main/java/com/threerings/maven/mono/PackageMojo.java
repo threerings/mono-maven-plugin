@@ -51,6 +51,18 @@ public class PackageMojo extends AbstractMojo
     private String[] additionalLibs = {};
 
     /**
+     * Disables the default compiler configuration.
+     */
+    @Parameter(defaultValue="false", property="mono.noconfig")
+    private boolean noconfig;
+
+    /**
+     * Disables importing the system standard libraries.
+     */
+    @Parameter(defaultValue="false", property="mono.nostdlib")
+    private boolean nostdlib;
+
+    /**
      * Defines the packaging version to use (-pkg).
      */
     @Parameter(defaultValue="dotnet35", property="mono.pkg")
@@ -61,6 +73,12 @@ public class PackageMojo extends AbstractMojo
      */
     @Parameter(defaultValue="library", property="mono.target")
     private String target;
+
+    /**
+     * Defines additional parameters.
+     */
+    @Parameter(defaultValue="", property="mono.parameters")
+    private String parameters;
 
     /**
      * Sets whether the fully qualified artifact name should be used when creating the dll. This
@@ -104,8 +122,16 @@ public class PackageMojo extends AbstractMojo
         project.getArtifact().setFile(artifactFile);
 
         cli.createArg().setValue("-out:" + artifactFile.getPath());
-        cli.createArg().setValue("-pkg:" + pkg);
+        if (!nostdlib) {
+            cli.createArg().setValue("-pkg:" + pkg);
+        } else {
+            cli.createArg().setValue("-nostdlib");
+        }
+        if (noconfig) {
+            cli.createArg().setValue("-noconfig");
+        }
         cli.createArg().setValue("-target:" + target);
+        cli.createArg().setLine(parameters);
 
         for (Object obj : project.getArtifacts()) {
             Artifact artifact = (Artifact)obj;
