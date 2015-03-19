@@ -109,8 +109,10 @@ public class PackageMojo extends AbstractMojo
 
         // create target directory if needed
         File projectDir = new File(project.getBuild().getDirectory());
+        getLog().debug("Project dir: " + project.getBuild().getDirectory());
         if (!projectDir.isDirectory()) {
-            projectDir.mkdir();
+            getLog().debug("Creating project directory");
+            projectDir.mkdirs();
         }
 
         // configure artifact file
