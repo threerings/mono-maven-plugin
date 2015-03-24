@@ -152,6 +152,13 @@ public class PackageMojo extends AbstractMojo
             cli.createArg().setValue(lib);
         }
 
+        for (int ii = 0; ii < sources.length; ii++) {
+            if (sources[ii].contains("*") && !sources[ii].contains("**")) {
+                cli.createArg().setValue("-recurse:'" + sources[ii] + "'");
+                sources[ii] = "";
+            }
+        }
+
         for (String source : findFiles(sources)) {
             cli.createArg().setValue(source);
         }
