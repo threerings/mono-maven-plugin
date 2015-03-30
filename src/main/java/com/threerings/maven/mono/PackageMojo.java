@@ -154,7 +154,8 @@ public class PackageMojo extends AbstractMojo
 
         for (int ii = 0; ii < sources.length; ii++) {
             if (sources[ii].contains("*") && !sources[ii].contains("**")) {
-                cli.createArg().setValue("-recurse:'" + sources[ii] + "'");
+                String path = project.getBasedir() + File.separator + normalizePattern(sources[ii]);
+                cli.createArg().setValue("-recurse:'" + path + "'");
                 sources[ii] = "";
             }
         }
@@ -212,5 +213,15 @@ public class PackageMojo extends AbstractMojo
         MojoExecutionException mex = new MojoExecutionException(message);
         mex.initCause(t);
         throw mex;
+    }
+
+    /**
+     * Normalizes the path pattern for platform-specific file separators.
+     */
+    private String normalizePattern (String pattern)
+    {
+        pattern = pattern.trim();
+        pattern = pattern.replace(File.separatorChar == '/' ? '\\' : '/', File.separatorChar);
+        return pattern;
     }
 }
