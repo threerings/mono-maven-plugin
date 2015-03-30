@@ -19,6 +19,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
+import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.cli.Commandline;
 
 /**
@@ -155,7 +156,13 @@ public class PackageMojo extends AbstractMojo
         for (int ii = 0; ii < sources.length; ii++) {
             if (sources[ii].contains("*") && !sources[ii].contains("**")) {
                 String path = project.getBasedir() + File.separator + normalizePattern(sources[ii]);
-                cli.createArg().setValue("-recurse:'" + path + "'");
+
+                // prevent globbing the wildcard on the path
+                if (Os.isFamily(Os.FAMILY_UNIX)) {
+                    path = "'" + path + "'";
+                }
+
+                cli.createArg().setValue("-recurse:" + path);
                 sources[ii] = "";
             }
         }
